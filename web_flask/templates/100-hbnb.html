@@ -49,7 +49,7 @@
                 <h1>Places</h1>
             </DIV>
             <DIV class="articles">
-                {% for place in places.values() | sort(attribute="name") %}
+            {% for place in places.values() | sort(attribute="name") %}
                 <ARTICLE>
                     <DIV class="price_title">
                         <DIV class="article_title">
@@ -92,7 +92,7 @@
                     </DIV>
                 </ARTICLE>
             {% endfor %}
-        </DIV>
+            </DIV>
         </SECTION>
     </DIV>
     <FOOTER>
