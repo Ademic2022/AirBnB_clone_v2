@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+<<<<<<< HEAD
 '''deletes out-of-date archives, using the function do_clean'''
 import os
 from datetime import datetime
@@ -89,3 +90,26 @@ def do_clean(number=0):
         " | sort -r | tr '\\n' ' ' | cut -d ' ' -f{}-)".format(start + 1)
     ]
     run(''.join(cmd_parts))
+=======
+""" Function that deploys """
+from fabric.api import *
+
+
+env.hosts = ['54.173.35.118', '54.90.47.123']
+env.user = "ubuntu"
+
+
+def do_clean(number=0):
+    """ CLEANS """
+
+    number = int(number)
+
+    if number == 0:
+        number = 2
+    else:
+        number += 1
+
+    local('cd versions ; ls -t | tail -n +{} | xargs rm -rf'.format(number))
+    path = '/data/web_static/releases'
+    run('cd {} ; ls -t | tail -n +{} | xargs rm -rf'.format(path, number))
+>>>>>>> 6bb9a0f3cfbeeb177b9c284664cfe651875d7abc
