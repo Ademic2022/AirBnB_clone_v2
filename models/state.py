@@ -15,6 +15,7 @@ class State(BaseModel, Base):
         name: input name
     """
     __tablename__ = "states"
+    __table_args__ = ({'mysql_default_charset': 'latin1'})
     name = Column(String(128), nullable=False)
     cities = relationship("City", cascade='all, delete, delete-orphan',
                           backref="state")
