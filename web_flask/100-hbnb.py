@@ -6,7 +6,7 @@ Routes:
   *  /hbnb: Display the HTML page for hbnb home page.
 """
 from flask import Flask
-from flask import render_template
+from flask import render_template, url_for
 from models import storage
 
 
