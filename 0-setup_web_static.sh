@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-<<<<<<< HEAD
 # sets up my web servers for the deployment of web_static
 
 echo -e "\e[1;32m START\e[0m"
@@ -47,7 +46,6 @@ echo
 #--restart NGINX
 sudo service nginx restart
 echo -e "\e[1;32m restart NGINX\e[0m"
-=======
 # Setup a web servers for the deployment of web_static.
 apt update -y
 apt install -y nginx
@@ -65,4 +63,3 @@ ln -sf /data/web_static/releases/test/ /data/web_static/current
 chown -R ubuntu:ubuntu /data
 sudo sed -i '39 i\ \tlocation /hbnb_static {\n\t\talias /data/web_static/current;\n\t}\n' /etc/nginx/sites-enabled/default
 sudo service nginx restart
->>>>>>> 6bb9a0f3cfbeeb177b9c284664cfe651875d7abc
