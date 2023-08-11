@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
 '''
 fabric script to distribute an archive to web servers
 ----NEEDS TO REVISIT SCRIPT
@@ -67,7 +66,7 @@ def do_deploy(archive_path):
     except Exception:
         success = False
     return success
-=======
+    
 """
 Fabric script that distributes an archive to your web servers
 """
@@ -119,4 +118,3 @@ def do_deploy(archive_path):
         return True
 
     return False
->>>>>>> 6bb9a0f3cfbeeb177b9c284664cfe651875d7abc
