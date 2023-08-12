@@ -1,13 +1,12 @@
 #!/usr/bin/python3
-<<<<<<< HEAD
-'''deletes out-of-date archives, using the function do_clean'''
+"""Deploy and clean up outdated archives."""
 import os
+import re
 from datetime import datetime
 from fabric.api import env, local, put, run, runs_once
 
-
+# Update the list of hosts
 env.hosts = ['34.138.32.248', '3.226.74.205']
-
 
 @runs_once
 def do_pack():
@@ -32,12 +31,8 @@ def do_pack():
         output = None
     return output
 
-
 def do_deploy(archive_path):
-    """Deploys the static files to the host servers.
-    Args:
-        archive_path (str): The path to the archived static files.
-    """
+    """Deploys the static files to the host servers."""
     if not os.path.exists(archive_path):
         return False
     file_name = os.path.basename(archive_path)
@@ -59,57 +54,40 @@ def do_deploy(archive_path):
         success = False
     return success
 
-
 def deploy():
-    """Archives and deploys the static files to the host servers.
-    """
+    """Archives and deploys the static files to the host servers."""
     archive_path = do_pack()
     return do_deploy(archive_path) if archive_path else False
 
-
 def do_clean(number=0):
-    """Deletes out-of-date archives of the static files.
-    Args:
-        number (Any): The number of archives to keep.
-    """
+    """Deletes out-of-date archives and releases."""
+    number = int(number)
+    if number < 0:
+        return
     archives = os.listdir('versions/')
     archives.sort(reverse=True)
-    start = int(number)
-    if not start:
-        start += 1
-    if start < len(archives):
-        archives = archives[start:]
-    else:
-        archives = []
-    for archive in archives:
-        os.unlink('versions/{}'.format(archive))
-    cmd_parts = [
-        "rm -rf $(",
-        "find /data/web_static/releases/ -maxdepth 1 -type d -iregex",
-        " '/data/web_static/releases/web_static_.*'",
-        " | sort -r | tr '\\n' ' ' | cut -d ' ' -f{}-)".format(start + 1)
-    ]
-    run(''.join(cmd_parts))
-=======
-""" Function that deploys """
-from fabric.api import *
-
-
-env.hosts = ['54.173.35.118', '54.90.47.123']
-env.user = "ubuntu"
-
-
-def do_clean(number=0):
-    """ CLEANS """
-
-    number = int(number)
-
     if number == 0:
-        number = 2
+        # Keep the latest
+        number = 1
     else:
         number += 1
 
-    local('cd versions ; ls -t | tail -n +{} | xargs rm -rf'.format(number))
+    # Delete outdated archives
+    for archive in archives[number:]:
+        os.unlink('versions/{}'.format(archive))
+
+    # Remove outdated releases on the server
     path = '/data/web_static/releases'
-    run('cd {} ; ls -t | tail -n +{} | xargs rm -rf'.format(path, number))
->>>>>>> 6bb9a0f3cfbeeb177b9c284664cfe651875d7abc
+    releases = run('ls -1t {} | grep web_static'.format(path))
+    releases_list = re.findall(r'web_static_\d{14}', releases)
+    if len(releases_list) > number:
+        for release in releases_list[number:]:
+            run('rm -rf {}/{}'.format(path, release))
+
+# Ensure both deploy and do_clean are available
+@runs_once
+def full_deploy_and_clean():
+    """Full deployment and clean-up."""
+    deployed = deploy()
+    cleaned = do_clean(2)  # Keep the latest 2 versions
+    return deployed and cleaned
